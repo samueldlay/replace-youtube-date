@@ -1,0 +1,19 @@
+{
+  "name": "replace-youtube-date",
+  "version": "1.0.0",
+  "description": "Replaces YouTube video dates with the date the video was uploaded",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "bash compile.sh"
+  },
+  "author": "Samuel Lay (https://samueldlay.com/)",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^5.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.1"
+  }
+}

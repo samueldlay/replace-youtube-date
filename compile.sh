@@ -1,0 +1,1 @@
+npx tsc youTubeUserscript.ts
