@@ -16,21 +16,19 @@ function assert (expr: unknown, msg?: string): asserts expr {
 }
 
 function replaceDate () {
-  const elementWithDate = document.getElementById("description-inner")
-    ?.children[1]
-    ?.children[0] as HTMLDivElement | undefined;
-  assert(exists(elementWithDate), "Element with date not found");
-
-  const actualDateText = elementWithDate.textContent?.split("•")[1]?.trim();
-  assert(actualDateText, "Date text not found");
-
-  const span = document.querySelector(
-    "div#info-container > yt-formatted-string.style-scope > span:nth-of-type(3)",
-  );
-  assert(exists(span), "Relative date element not found");
-
-  span.textContent = actualDateText;
-  console.log(actualDateText);
+  const infoContainer = document.getElementById("info-container");
+  assert(exists(infoContainer), "Info container not found");
+  const originalDate = infoContainer.querySelectorAll("span.style-scope")[2];
+  assert(exists(originalDate), "Original date not found");
+  const showAll = document.getElementById("expand");
+  assert(exists(showAll), "Show all button not found");
+  showAll.click();
+  const actualDate = infoContainer.querySelectorAll("span.style-scope")[2]?.textContent;
+  assert(exists(actualDate), "Actual date not found");
+  const collapse = document.getElementById("collapse");
+  assert(exists(collapse), "Collapse button not found");
+  collapse.click();
+  originalDate.textContent = actualDate;
 }
 
 function handleYTNavigation () {
