@@ -1,7 +1,10 @@
-/// <reference no-default-lib="true" />
-/// <reference lib="esnext" />
-/// <reference lib="dom" />
-/// <reference lib="dom.iterable" />
+class AssertionError extends Error {
+  override name = "AssertionError";
+}
+
+function assert (expr: unknown, msg?: string): asserts expr {
+  if (!expr) throw new AssertionError(msg);
+}
 
 // Type guard
 // Ref: https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates
@@ -11,9 +14,43 @@ function exists<T> (maybeValue: T): maybeValue is NonNullable<T> {
   // return maybeValue != null;
 }
 
-function assert (expr: unknown, msg?: string): asserts expr {
-  if (!expr) throw new Error(msg);
+function delay (ms: number): Promise<void> {
+  return new Promise((res) => setTimeout(res, ms));
 }
+
+type WaitForOptions = Partial<{
+  interval: number;
+  retryCount: number;
+}>;
+
+async function waitFor<T> (
+  callback: () => T,
+  {
+    interval = 100,
+    retryCount = 8,
+  }: WaitForOptions = {},
+): Promise<Awaited<T>> {
+  let cause: unknown = undefined;
+  for (let i = retryCount; i > 0; i -= 1) {
+    try {
+      return await callback();
+    } catch (ex) {
+      cause = ex;
+    }
+    await delay(interval);
+  }
+  throw new Error(`Timeout exceeded`, {cause});
+}
+
+const $ = <T extends Element = Element> (
+  selector: string,
+  root: ParentNode = document,
+): T | null => root.querySelector(selector);
+
+const $$ = <T extends Element = Element> (
+  selector: string,
+  root: ParentNode = document,
+): T[] => [...root.querySelectorAll<T>(selector)];
 
 function replaceDate () {
   const infoContainer = document.getElementById("info-container");
@@ -31,9 +68,15 @@ function replaceDate () {
   originalDate.textContent = actualDate;
 }
 
-function handleYTNavigation () {
-  // TODO(Sam): Use Mutation Observer
+// TODO(Sam): Use Mutation Observer
+async function handleYTNavigation () {
   setTimeout(replaceDate, 3000);
+  // await waitFor(() => {
+  //   const targetElement = $("#info-container span.style-scope:nth-of-type(3)");
+  //   assert(exists(targetElement), "Target element not found");
+  // });
+
+  // replaceDate();
 }
 
 window.addEventListener("yt-navigate-finish", handleYTNavigation);
