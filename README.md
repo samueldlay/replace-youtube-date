@@ -16,4 +16,4 @@ clicked)
 
 - Run the compile script: `npm compile`
 - Copy the code from `youtubeUserscript.js`
-- Paste the code into your console at any YouTube video URL
+- Paste the code into your console at any YouTube video URL and press `enter` or `return` on your keyboard
